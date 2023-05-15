@@ -61,11 +61,11 @@ Requirement for the Project Assessment:
 
 4. Named the deployment : final-project-wp-scalefocus.
 5. Deployed the helm chart using the Jenkins pipeline. Here is the output:
- 
-                           Started by user Daniel Jovevski
+
+            Started by user Daniel Jovevski
             [Pipeline] Start of Pipeline
             [Pipeline] node
-            Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2
+            Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus
             [Pipeline] {
             [Pipeline] withEnv
             [Pipeline] {
@@ -75,9 +75,9 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>kubectl get deployment final-project-wp-scalefocus-wordpress -n wp 
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get deployment final-project-wp-scalefocus-wordpress -n wp 
             NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
-            final-project-wp-scalefocus-wordpress   1/1     1            1           137m
+            final-project-wp-scalefocus-wordpress   1/1     1            1           143m
             [Pipeline] echo
             WordPress is already installed
             [Pipeline] }
@@ -90,18 +90,18 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>kubectl get namespace wp 
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
             NAME   STATUS   AGE
-            wp     Active   137m
+            wp     Active   143m
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
             Release "final-project-wp-scalefocus" has been upgraded. Happy Helming!
             NAME: final-project-wp-scalefocus
-            LAST DEPLOYED: Mon May 15 18:16:02 2023
+            LAST DEPLOYED: Mon May 15 18:21:27 2023
             NAMESPACE: wp
             STATUS: deployed
-            REVISION: 17
+            REVISION: 18
             TEST SUITE: None
             NOTES:
             CHART NAME: wordpress
@@ -130,15 +130,18 @@ Requirement for the Project Assessment:
               echo Password: $(kubectl get secret --namespace wp final-project-wp-scalefocus-wordpress -o jsonpath="{.data.wordpress-password}" | base64 -d)
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
-                            Forwarding from 127.0.0.1:80 -> 8080
-                            Handling connection for 80
-                            Handling connection for 80
-                            Handling connection for 80
-                            Handling connection for 80
-                            Handling connection for 80
-                            Handling connection for 80
-                            Handling connection for 80
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
+
+            Forwarding from 127.0.0.1:80 -> 8080
+            Handling connection for 80
+            Handling connection for 80
+            Handling connection for 80
+            Handling connection for 80
+            Handling connection for 80
+            Handling connection for 80
+            Handling connection for 80
+                   
+                   
 6. When i click and load the home page of the WordPress the homepage is shown : 
 ![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/c6f1e9d7-4feb-4f4e-8398-fc3a8438a841)
    Also for the admin panel : 
