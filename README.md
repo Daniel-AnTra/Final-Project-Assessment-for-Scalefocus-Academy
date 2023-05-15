@@ -10,9 +10,7 @@ Requirement for the Project Assessment:
   Here is my Jenkins pipeline: 
   
             pipeline {
-
             agent any
-            //Set the KUBECONFIG environment variable. This ensures that the kubectl and helm commands executed by Jenkins use the correct configuration.
             environment {
               KUBECONFIG = '/Users/Daniel/.kube/config'
             }
@@ -20,8 +18,14 @@ Requirement for the Project Assessment:
               stage('Verify') {
                 steps {
                   script {
+                   // Check if the namespace exists
+                    def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
+                    if (!namespaceExists) {
+                   // Create the namespace
+                    bat 'kubectl create namespace wp'
+                      }
                     // Check if WordPress deployment exists
-                    def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus-wordpress -n wp', returnStatus: true) == 0
+                    def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus -n wp', returnStatus: true) == 0
                     if (deploymentExists) {
                       echo 'WordPress is already installed'
                     } else {
@@ -34,20 +38,15 @@ Requirement for the Project Assessment:
                 steps {
                   script {
                     try {
-                      // Check if the namespace exists
-                      def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
-                      if (!namespaceExists) {
-                        // Create the namespace
-                        bat 'kubectl create namespace wp'
-                      }
                       // Deploy the application using Helm
-                      bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
-                      // Forward the port in the foreground
+                      bat 'helm install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
 
+                      // Forward the port in the foreground
                       bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
 
+
                     } catch (Exception e) {
-                      // Handle any deployment errors
+                      // Log the error message for troubleshooting
                       echo "Deployment error: ${e.getMessage()}"
                       error "Deployment failed: ${e.getMessage()}"
                     }
@@ -75,6 +74,11 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
+            NAME   STATUS   AGE
+            wp     Active   4h26m
+            [Pipeline] bat
+
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get deployment final-project-wp-scalefocus -n wp 
             Error from server (NotFound): deployments.apps "final-project-wp-scalefocus" not found
             [Pipeline] echo
@@ -89,18 +93,13 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
-            NAME   STATUS   AGE
-            wp     Active   3h22m
-            [Pipeline] bat
-
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
             Release "final-project-wp-scalefocus" has been upgraded. Happy Helming!
             NAME: final-project-wp-scalefocus
-            LAST DEPLOYED: Mon May 15 19:20:57 2023
+            LAST DEPLOYED: Mon May 15 20:25:22 2023
             NAMESPACE: wp
             STATUS: deployed
-            REVISION: 23
+            REVISION: 26
             TEST SUITE: None
             NOTES:
             CHART NAME: wordpress
@@ -129,7 +128,7 @@ Requirement for the Project Assessment:
               echo Password: $(kubectl get secret --namespace wp final-project-wp-scalefocus-wordpress -o jsonpath="{.data.wordpress-password}" | base64 -d)
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80
             Forwarding from 127.0.0.1:80 -> 8080
             Handling connection for 80
             Handling connection for 80
