@@ -144,7 +144,7 @@ Requirement for the Project Assessment:
 ![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/4d73e1c4-393d-429d-bbcd-53ea19d89ab3)
 
    Also for the admin panel : 
-![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/d6e763e9-ede7-4e5c-aaae-1f08d4481705)
+![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/ec674c7b-bdd2-465f-bc5b-02033ebd5f88)
 7. Explained all the steps for the project in this README ! 
 
 
