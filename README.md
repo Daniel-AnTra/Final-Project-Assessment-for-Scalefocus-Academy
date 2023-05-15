@@ -48,6 +48,7 @@ Requirement for the Project Assessment:
 
                     } catch (Exception e) {
                       // Handle any deployment errors
+                      echo "Deployment error: ${e.getMessage()}"
                       error "Deployment failed: ${e.getMessage()}"
                     }
                   }
@@ -140,7 +141,7 @@ Requirement for the Project Assessment:
                    
                    
 6. When i click and load the home page of the WordPress the homepage is shown : 
-![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/7462268c-958f-4874-a2cc-8f8b2561d365)
+![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/4d73e1c4-393d-429d-bbcd-53ea19d89ab3)
 
    Also for the admin panel : 
 ![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/d6e763e9-ede7-4e5c-aaae-1f08d4481705)
