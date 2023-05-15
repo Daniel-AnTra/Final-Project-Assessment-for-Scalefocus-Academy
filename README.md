@@ -8,6 +8,7 @@ Requirement for the Project Assessment:
 2. Corrected the values.yaml the LoadBalancer to type: ClusterIP
 3. Created  Jenkins pipeline that checks if wp namespace exists, if it doesn’t then it creates one. Checks if WordPress exists, if it doesn’t then it installs the chart.
   Here is my Jenkins pipeline: 
+  
                     pipeline {
                       agent any
                       environment {
