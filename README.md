@@ -9,50 +9,53 @@ Requirement for the Project Assessment:
 3. Created  Jenkins pipeline that checks if wp namespace exists, if it doesn’t then it creates one. Checks if WordPress exists, if it doesn’t then it installs the chart.
   Here is my Jenkins pipeline: 
   
-      pipeline {
-      agent any
-      environment {
-        KUBECONFIG = '/Users/Daniel/.kube/config'
-      }
-      stages {
-        stage('Verify') {
-          steps {
-            script {
-              // Check if WordPress deployment exists
-              def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus-wordpress -n wp', returnStatus: true) == 0
-              if (deploymentExists) {
-                echo 'WordPress is already installed'
-              } else {
-                error 'WordPress is not installed. Proceed with the deployment.'
-              }
+            pipeline {
+
+            agent any
+            environment {
+              KUBECONFIG = '/Users/Daniel/.kube/config'
             }
-          }
-        }
-        stage('Deploy') {
-          steps {
-            script {
-              try {
-                // Check if the namespace exists
-                def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
-                if (!namespaceExists) {
-                  // Create the namespace
-                  bat 'kubectl create namespace wp'
+            stages {
+              stage('Verify') {
+                steps {
+                  script {
+                    // Check if WordPress deployment exists
+                    def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus-wordpress -n wp', returnStatus: true) == 0
+                    if (deploymentExists) {
+                      echo 'WordPress is already installed'
+                    } else {
+                      error 'WordPress is not installed. Proceed with the deployment.'
+                    }
+                  }
                 }
-                // Deploy the application using Helm
-                bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
-                // Forward the port in the foreground
-                bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
-                // Continue with the subsequent steps after port-forwarding
-                // Add your additional steps here
-              } catch (Exception e) {
-                // Handle any deployment errors
-                error "Deployment failed: ${e.getMessage()}"
+              }
+              stage('Deploy') {
+                steps {
+                  script {
+                    try {
+                      // Check if the namespace exists
+                      def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
+                      if (!namespaceExists) {
+                        // Create the namespace
+                        bat 'kubectl create namespace wp'
+                      }
+                      // Deploy the application using Helm
+                      bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
+                      // Forward the port in the foreground
+
+                      bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
+                      // Continue with the subsequent steps after port-forwarding
+                      // Add your additional steps here
+
+                    } catch (Exception e) {
+                      // Handle any deployment errors
+                      error "Deployment failed: ${e.getMessage()}"
+                    }
+                  }
+                }
               }
             }
           }
-        }
-      }
-    }
 
 
 
