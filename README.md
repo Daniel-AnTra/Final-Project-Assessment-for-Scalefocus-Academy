@@ -50,7 +50,8 @@ Requirement for the Project Assessment:
 
 
 4. Named the deployment : final-project-wp-scalefocus.
-5. Deployed the helm chart using the Jenkins pipeline. Here is the output: 
+5. Deployed the helm chart using the Jenkins pipeline. Here is the output:
+ 
                 Started by user Daniel Jovevski
                 [Pipeline] Start of Pipeline
                 [Pipeline] node
