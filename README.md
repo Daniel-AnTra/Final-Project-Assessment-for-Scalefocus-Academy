@@ -24,9 +24,8 @@ Requirement for the Project Assessment:
                     def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus-wordpress -n wp', returnStatus: true) == 0
                     if (deploymentExists) {
                       echo 'WordPress is already installed'
-                      return
                     } else {
-                      error 'WordPress is not installed. Proceed with the deployment.'
+                      echo 'WordPress is not installed. Proceed with the deployment.'
                     }
                   }
                 }
@@ -75,11 +74,10 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get deployment final-project-wp-scalefocus-wordpress -n wp 
-            NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
-            final-project-wp-scalefocus-wordpress   1/1     1            1           143m
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get deployment final-project-wp-scalefocus -n wp 
+            Error from server (NotFound): deployments.apps "final-project-wp-scalefocus" not found
             [Pipeline] echo
-            WordPress is already installed
+            WordPress is not installed. Proceed with the deployment.
             [Pipeline] }
             [Pipeline] // script
             [Pipeline] }
@@ -92,16 +90,16 @@ Requirement for the Project Assessment:
 
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
             NAME   STATUS   AGE
-            wp     Active   143m
+            wp     Active   3h22m
             [Pipeline] bat
 
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
             Release "final-project-wp-scalefocus" has been upgraded. Happy Helming!
             NAME: final-project-wp-scalefocus
-            LAST DEPLOYED: Mon May 15 18:21:27 2023
+            LAST DEPLOYED: Mon May 15 19:20:57 2023
             NAMESPACE: wp
             STATUS: deployed
-            REVISION: 18
+            REVISION: 23
             TEST SUITE: None
             NOTES:
             CHART NAME: wordpress
