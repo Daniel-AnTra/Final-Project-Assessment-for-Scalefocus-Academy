@@ -145,7 +145,8 @@ Requirement for the Project Assessment:
                    
                    
 6. When i click and load the home page of the WordPress the homepage is shown : 
-![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/c6f1e9d7-4feb-4f4e-8398-fc3a8438a841)
+![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/7462268c-958f-4874-a2cc-8f8b2561d365)
+
    Also for the admin panel : 
 ![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/d6e763e9-ede7-4e5c-aaae-1f08d4481705)
 7. Explained all the steps for the project in this README ! 
