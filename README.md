@@ -46,8 +46,6 @@ Requirement for the Project Assessment:
                       // Forward the port in the foreground
 
                       bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
-                      // Continue with the subsequent steps after port-forwarding
-                      // Add your additional steps here
 
                     } catch (Exception e) {
                       // Handle any deployment errors
