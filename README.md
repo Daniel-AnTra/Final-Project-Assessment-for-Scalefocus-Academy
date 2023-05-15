@@ -129,7 +129,6 @@ Requirement for the Project Assessment:
             [Pipeline] bat
 
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
-
             Forwarding from 127.0.0.1:80 -> 8080
             Handling connection for 80
             Handling connection for 80
