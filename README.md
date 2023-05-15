@@ -9,121 +9,136 @@ Requirement for the Project Assessment:
 3. Created  Jenkins pipeline that checks if wp namespace exists, if it doesn’t then it creates one. Checks if WordPress exists, if it doesn’t then it installs the chart.
   Here is my Jenkins pipeline: 
   
-                    pipeline {
-                      agent any
-                      environment {
-                        //Set the KUBECONFIG environment variable
-                        KUBECONFIG = '/Users/Daniel/.kube/config' 
-                      }
-                      stages {
-                        stage('Verify') {
-                          steps {
-                            //this commands verify that the authentication and configuration are working correctly
-                            bat 'kubectl config get-contexts'
-                          }
-                        }
-                        stage('Deploy : final-project-wp-scalefocus.') {
-                          steps {
-                            script {
-                              try {
-                                // Check if the namespace exists
-                                def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
-                                if (!namespaceExists) {
-                                  // Create the namespace
-                                  bat 'kubectl create namespace wp'
-                                }
-                                // Deploy the application using Helm
-                                bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
+                   pipeline {
+      agent any
+      environment {
+        KUBECONFIG = '/Users/Daniel/.kube/config'
+      }
+      stages {
+        stage('Verify') {
+          steps {
+            script {
+              // Check if WordPress deployment exists
+              def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus-wordpress -n wp', returnStatus: true) == 0
+              if (deploymentExists) {
+                echo 'WordPress is already installed'
+              } else {
+                error 'WordPress is not installed. Proceed with the deployment.'
+              }
+            }
+          }
+        }
+        stage('Deploy') {
+          steps {
+            script {
+              try {
+                // Check if the namespace exists
+                def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
+                if (!namespaceExists) {
+                  // Create the namespace
+                  bat 'kubectl create namespace wp'
+                }
+                // Deploy the application using Helm
+                bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
 
-                                // Forward the port in the foreground
-                                bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
+                // Forward the port in the foreground
+                bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
 
-                              } catch (Exception e) {
-                                // Handle any deployment errors
-                                error "Deployment failed: ${e.getMessage()}"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
+                // Continue with the subsequent steps after port-forwarding
+                // Add your additional steps here
+
+              } catch (Exception e) {
+                // Handle any deployment errors
+                error "Deployment failed: ${e.getMessage()}"
+              }
+            }
+          }
+        }
+      }
+    }
+
 
 
 4. Named the deployment : final-project-wp-scalefocus.
 5. Deployed the helm chart using the Jenkins pipeline. Here is the output:
  
-                Started by user Daniel Jovevski
-                [Pipeline] Start of Pipeline
-                [Pipeline] node
-                Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus
-                [Pipeline] {
-                [Pipeline] withEnv
-                [Pipeline] {
-                [Pipeline] stage
-                [Pipeline] { (Verify)
-                [Pipeline] bat
+                           Started by user Daniel Jovevski
+            [Pipeline] Start of Pipeline
+            [Pipeline] node
+            Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2
+            [Pipeline] {
+            [Pipeline] withEnv
+            [Pipeline] {
+            [Pipeline] stage
+            [Pipeline] { (Verify)
+            [Pipeline] script
+            [Pipeline] {
+            [Pipeline] bat
 
-                C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl config get-contexts 
-                CURRENT   NAME             CLUSTER          AUTHINFO         NAMESPACE
-                          docker-desktop   docker-desktop   docker-desktop   
-                *         minikube         minikube         minikube         default
-                [Pipeline] }
-                [Pipeline] // stage
-                [Pipeline] stage
-                [Pipeline] { (Deploy)
-                [Pipeline] script
-                [Pipeline] {
-                [Pipeline] bat
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>kubectl get deployment final-project-wp-scalefocus-wordpress -n wp 
+            NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
+            final-project-wp-scalefocus-wordpress   1/1     1            1           137m
+            [Pipeline] echo
+            WordPress is already installed
+            [Pipeline] }
+            [Pipeline] // script
+            [Pipeline] }
+            [Pipeline] // stage
+            [Pipeline] stage
+            [Pipeline] { (Deploy)
+            [Pipeline] script
+            [Pipeline] {
+            [Pipeline] bat
 
-                C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
-                NAME   STATUS   AGE
-                wp     Active   58m
-                [Pipeline] bat
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>kubectl get namespace wp 
+            NAME   STATUS   AGE
+            wp     Active   137m
+            [Pipeline] bat
 
-                C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
-                Release "final-project-wp-scalefocus" has been upgraded. Happy Helming!
-                NAME: final-project-wp-scalefocus
-                LAST DEPLOYED: Mon May 15 16:57:00 2023
-                NAMESPACE: wp
-                STATUS: deployed
-                REVISION: 16
-                TEST SUITE: None
-                NOTES:
-                CHART NAME: wordpress
-                CHART VERSION: 16.1.2
-                APP VERSION: 6.2.0
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
+            Release "final-project-wp-scalefocus" has been upgraded. Happy Helming!
+            NAME: final-project-wp-scalefocus
+            LAST DEPLOYED: Mon May 15 18:16:02 2023
+            NAMESPACE: wp
+            STATUS: deployed
+            REVISION: 17
+            TEST SUITE: None
+            NOTES:
+            CHART NAME: wordpress
+            CHART VERSION: 16.1.2
+            APP VERSION: 6.2.0
 
-                ** Please be patient while the chart is being deployed **
+            ** Please be patient while the chart is being deployed **
 
-                Your WordPress site can be accessed through the following DNS name from within your cluster:
+            Your WordPress site can be accessed through the following DNS name from within your cluster:
 
-                    final-project-wp-scalefocus-wordpress.wp.svc.cluster.local (port 80)
+                final-project-wp-scalefocus-wordpress.wp.svc.cluster.local (port 80)
 
-                To access your WordPress site from outside the cluster follow the steps below:
+            To access your WordPress site from outside the cluster follow the steps below:
 
-                1. Get the WordPress URL by running these commands:
+            1. Get the WordPress URL by running these commands:
 
-                   kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 &
-                   echo "WordPress URL: http://127.0.0.1//"
-                   echo "WordPress Admin URL: http://127.0.0.1//admin"
+               kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 &
+               echo "WordPress URL: http://127.0.0.1//"
+               echo "WordPress Admin URL: http://127.0.0.1//admin"
 
-                2. Open a browser and access WordPress using the obtained URL.
+            2. Open a browser and access WordPress using the obtained URL.
 
-                3. Login with the following credentials below to see your blog:
+            3. Login with the following credentials below to see your blog:
 
-                  echo Username: user
-                  echo Password: $(kubectl get secret --namespace wp final-project-wp-scalefocus-wordpress -o jsonpath="{.data.wordpress-password}" | base64 -d)
-                [Pipeline] bat
+              echo Username: user
+              echo Password: $(kubectl get secret --namespace wp final-project-wp-scalefocus-wordpress -o jsonpath="{.data.wordpress-password}" | base64 -d)
+            [Pipeline] bat
 
-                C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
-                Forwarding from 127.0.0.1:80 -> 8080
-                Handling connection for 80
-                Handling connection for 80
-                Handling connection for 80
-                Handling connection for 80
-                Handling connection for 80
-                Handling connection for 80
-                Handling connection for 80
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus@2>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
+                            Forwarding from 127.0.0.1:80 -> 8080
+                            Handling connection for 80
+                            Handling connection for 80
+                            Handling connection for 80
+                            Handling connection for 80
+                            Handling connection for 80
+                            Handling connection for 80
+                            Handling connection for 80
 6. When i click and load the home page of the WordPress the homepage is shown : 
 ![image](https://github.com/Daniel-AnTra/Final-Project-Assessment-for-Scalefocus-Academy/assets/121831389/c6f1e9d7-4feb-4f4e-8398-fc3a8438a841)
    Also for the admin panel : 
