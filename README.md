@@ -40,13 +40,10 @@ Requirement for the Project Assessment:
                 }
                 // Deploy the application using Helm
                 bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
-
                 // Forward the port in the foreground
                 bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
-
                 // Continue with the subsequent steps after port-forwarding
                 // Add your additional steps here
-
               } catch (Exception e) {
                 // Handle any deployment errors
                 error "Deployment failed: ${e.getMessage()}"
