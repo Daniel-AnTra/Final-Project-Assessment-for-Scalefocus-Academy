@@ -12,6 +12,7 @@ Requirement for the Project Assessment:
             pipeline {
 
             agent any
+            //Set the KUBECONFIG environment variable. This ensures that the kubectl and helm commands executed by Jenkins use the correct configuration.
             environment {
               KUBECONFIG = '/Users/Daniel/.kube/config'
             }
@@ -23,6 +24,7 @@ Requirement for the Project Assessment:
                     def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus-wordpress -n wp', returnStatus: true) == 0
                     if (deploymentExists) {
                       echo 'WordPress is already installed'
+                      return
                     } else {
                       error 'WordPress is not installed. Proceed with the deployment.'
                     }
