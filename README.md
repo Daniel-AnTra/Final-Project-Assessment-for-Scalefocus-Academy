@@ -18,12 +18,6 @@ Requirement for the Project Assessment:
               stage('Verify') {
                 steps {
                   script {
-                   // Check if the namespace exists
-                    def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
-                    if (!namespaceExists) {
-                   // Create the namespace
-                    bat 'kubectl create namespace wp'
-                      }
                     // Check if WordPress deployment exists
                     def deploymentExists = bat(script: 'kubectl get deployment final-project-wp-scalefocus -n wp', returnStatus: true) == 0
                     if (deploymentExists) {
@@ -38,8 +32,14 @@ Requirement for the Project Assessment:
                 steps {
                   script {
                     try {
+                      // Check if the namespace exists
+                      def namespaceExists = bat(script: 'kubectl get namespace wp', returnStatus: true) == 0
+                      if (!namespaceExists) {
+                        // Create the namespace
+                        bat 'kubectl create namespace wp'
+                      }
                       // Deploy the application using Helm
-                      bat 'helm install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
+                      bat 'helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml'
 
                       // Forward the port in the foreground
                       bat 'kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80'
@@ -55,6 +55,7 @@ Requirement for the Project Assessment:
               }
             }
           }
+
 
 
 
@@ -74,11 +75,6 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
-            NAME   STATUS   AGE
-            wp     Active   4h26m
-            [Pipeline] bat
-
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get deployment final-project-wp-scalefocus -n wp 
             Error from server (NotFound): deployments.apps "final-project-wp-scalefocus" not found
             [Pipeline] echo
@@ -93,13 +89,18 @@ Requirement for the Project Assessment:
             [Pipeline] {
             [Pipeline] bat
 
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl get namespace wp 
+            NAME   STATUS   AGE
+            wp     Active   3h51m
+            [Pipeline] bat
+
             C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>helm upgrade --install final-project-wp-scalefocus /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress -n wp -f /Users/Daniel/desktop/final-assessment/charts/bitnami/wordpress/values.yaml 
             Release "final-project-wp-scalefocus" has been upgraded. Happy Helming!
             NAME: final-project-wp-scalefocus
-            LAST DEPLOYED: Mon May 15 20:25:22 2023
+            LAST DEPLOYED: Mon May 15 19:49:56 2023
             NAMESPACE: wp
             STATUS: deployed
-            REVISION: 26
+            REVISION: 25
             TEST SUITE: None
             NOTES:
             CHART NAME: wordpress
@@ -128,7 +129,7 @@ Requirement for the Project Assessment:
               echo Password: $(kubectl get secret --namespace wp final-project-wp-scalefocus-wordpress -o jsonpath="{.data.wordpress-password}" | base64 -d)
             [Pipeline] bat
 
-            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80
+            C:\ProgramData\Jenkins\.jenkins\workspace\final-project-wp-scalefocus>kubectl port-forward --namespace wp svc/final-project-wp-scalefocus-wordpress 80:80 
             Forwarding from 127.0.0.1:80 -> 8080
             Handling connection for 80
             Handling connection for 80
