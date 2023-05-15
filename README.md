@@ -9,7 +9,7 @@ Requirement for the Project Assessment:
 3. Created  Jenkins pipeline that checks if wp namespace exists, if it doesn’t then it creates one. Checks if WordPress exists, if it doesn’t then it installs the chart.
   Here is my Jenkins pipeline: 
   
-                   pipeline {
+      pipeline {
       agent any
       environment {
         KUBECONFIG = '/Users/Daniel/.kube/config'
